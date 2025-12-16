@@ -15,5 +15,4 @@ def cleared_data():
 def one_day1(start):
     data = cleared_data()
     day = data.Close.values[(start*1440): (start*1440 + 1440)]
-
-one_day1(5)
+    return day
