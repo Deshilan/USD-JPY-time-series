@@ -7,13 +7,13 @@ import matplotlib.pyplot as plt
 def hours_test():
     dataset = hours_dataset()
     data = dataset[:10000]
-    model = Holt(data)
+    split = int(len(data) * 0.8)
+    train, test = data[:split], data[split:]
+    model = Holt(train)
     fit = model.fit(optimized=True)
-    forecast = fit.forecast(100)
-    print(forecast)
-    print(dataset[10000:10100])
+    forecast = fit.forecast(len(data[split:]))
     plt.plot(forecast)
-    plt.plot(dataset[10000:10100])
+    plt.plot(test)
     plt.show()
 
 
@@ -25,13 +25,15 @@ def hours_test():
 def minutes_test():
     dataset = cleared_data()
     data = dataset.Close.values[(300):(600)]
-    model = Holt(data)
+    split = int(len(data) * 0.8)
+    train, test = data[:split], data[split:]
+    model = Holt(train)
     fit = model.fit(optimized=True)
-    forecast = fit.forecast(20)
+    forecast = fit.forecast(len(data[split:]))
     results = dataset.Close.values[(600):(620)]
     print(forecast)
     plt.plot(forecast)
-    plt.plot(results)
+    plt.plot(test)
     plt.show()
 
 # It is hard to say here; this requires further testing. The direction of volume movement matches more often than not,

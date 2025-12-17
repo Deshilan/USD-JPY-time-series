@@ -1,0 +1,29 @@
+from Data_import import hours_dataset, cleared_data
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
+import pandas as pd
+
+pure_data = cleared_data()
+data = pure_data['Close'][:10000]
+data.index = pd.to_datetime(data.index)
+data = data.asfreq("M")
+split = int(len(data)*0.8)
+train, test = data[:split], data[split:]
+
+model = ARIMA(train, order=(5,0,0))
+res = model.fit()
+print(res.summary())
+
+
+forecast_res = res.get_forecast(steps=len(test))
+pred = forecast_res.predicted_mean
+ci = forecast_res.conf_int()
+
+# Wykres
+plt.figure(figsize=(12, 5))
+plt.plot(train, label="train")
+plt.plot(test, label="test")
+plt.plot(pred, label="forecast")
+plt.fill_between(ci.index, ci.iloc[:, 0], ci.iloc[:, 1], alpha=0.2)
+plt.legend()
+plt.show()
