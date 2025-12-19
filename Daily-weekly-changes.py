@@ -16,8 +16,8 @@ def daily_changes_per_minute():
             else:
                 res[y] = res[y] + abs((data[y] - data[y - 1]))
 
-    for x in range(len(res)):
-        res[x] = res[x] / 100
+    for m in range(len(res)):
+        res[m] = res[m] / 100
 
     plt.plot(res)
     plt.show()

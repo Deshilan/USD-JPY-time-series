@@ -22,15 +22,14 @@ def hours_test():
 # can indicate a trend line. As in this example: 4 days (i.e. a period with a low probability of publishing
 # important data), and the overall trend is consistent with the results.
 
-def minutes_test():
+def minutes_test(start, end):
     dataset = cleared_data()
-    data = dataset.Close.values[(300):(600)]
+    data = dataset.Close.values[start:end]
     split = int(len(data) * 0.8)
     train, test = data[:split], data[split:]
     model = Holt(train)
     fit = model.fit(optimized=True)
     forecast = fit.forecast(len(data[split:]))
-    results = dataset.Close.values[(600):(620)]
     print(forecast)
     plt.plot(forecast)
     plt.plot(test)
