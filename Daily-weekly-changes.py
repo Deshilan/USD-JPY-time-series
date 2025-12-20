@@ -7,7 +7,7 @@ import Data_import
 def daily_changes_per_minute():
     res = [0] * 1440
     nb = 1440
-    for x in range(100):
+    for x in range(10):
         old_data = Data_import.one_day1(x)
         data = Data_import.one_day1(x + 1)
         for y in range(nb):
@@ -17,7 +17,7 @@ def daily_changes_per_minute():
                 res[y] = res[y] + abs((data[y] - data[y - 1]))
 
     for m in range(len(res)):
-        res[m] = res[m] / 100
+        res[m] = res[m] / 10
 
     plt.plot(res)
     plt.show()

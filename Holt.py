@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 
 
 
-def hours_test():
+def hours_test(start, end):
     dataset = hours_dataset()
-    data = dataset[:10000]
+    data = dataset[start:end]
     split = int(len(data) * 0.8)
     train, test = data[:split], data[split:]
     model = Holt(train)
