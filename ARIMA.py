@@ -1,18 +1,17 @@
-from Data_import import hours_dataset, cleared_data
+import Data_import
 from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
 import pandas as pd
 
 def arima_test(start, end):
-    pure_data = cleared_data()
-    pure_data = pure_data[start:end]
+    pure_data = Data_import.cleared_data(start, end)
     pure_data.index = pd.to_datetime(pure_data.index)
     pure_data = pure_data.asfreq("min")
     data = pure_data['Close']
     split = int(len(data)*0.8)
     train, test = data[:split], data[split:]
 
-    model = ARIMA(train, order=(30,0,1))
+    model = ARIMA(train, order=(60,0,1))
     res = model.fit()
     print(res.summary())
 
@@ -30,4 +29,4 @@ def arima_test(start, end):
     plt.legend()
     plt.show()
 
-arima_test(0, 300)
+arima_test(600, 1000)
