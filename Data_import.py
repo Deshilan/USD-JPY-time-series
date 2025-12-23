@@ -196,4 +196,6 @@ def add_Japan_interest_rate():
     data.drop(columns=['volume','High','Low','Open'], inplace=True)
     data.to_csv("USD-JPY-with-IR.csv", index=False)
 
-add_Japan_interest_rate()
+def hours_with_IR():
+    data = pd.read_csv('USD-JPY-with-IR.csv')
+    return data
