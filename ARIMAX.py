@@ -5,31 +5,26 @@ from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
 import pandas as pd
 
-
-def arima_test(start, end):
-    pure_data = Data_import.cleared_data(start, end)
-    pure_data.index = pd.to_datetime(pure_data.index)
-    pure_data = pure_data.asfreq("min")
-    data = pure_data['Close']
-    split = int(len(data)*0.8)
+def arimax():
+    data = Data_import.hours_with_IR()
+    data = data.iloc[:-1]
+    split = int(len(data) * 0.95)
     train, test = data[:split], data[split:]
+    exog_var_train = train[['JapanIR', 'USAIR']]
+    exog_var_test = test[['JapanIR', 'USAIR']]
+    exog_var_train.std()
 
-    model = ARIMA(train, order=(60,0,1))
-    res = model.fit()
-    print(res.summary())
+    model = SARIMAX(train['Close'], order=(60,1, 1), exog=exog_var_train, seasonal_order=(0, 0, 0, 0))
 
-
-    forecast_res = res.get_forecast(steps=len(test))
-    pred = forecast_res.predicted_mean
-    ci = forecast_res.conf_int()
-
-    # Wykres
-    plt.figure(figsize=(12, 5))
-    plt.plot(train, label="train")
-    plt.plot(test, label="test")
-    plt.plot(pred, label="forecast")
-    plt.fill_between(ci.index, ci.iloc[:, 0], ci.iloc[:, 1], alpha=0.1)
-    plt.legend()
+    model_fit = model.fit()
+    forecast = model_fit.forecast(len(test), exog=exog_var_test)
+    print(forecast)
+    plt.figure(figsize=(12, 8))
+    plt.plot(test['Close'], color='blue', label='Test')
+    plt.plot(forecast, color='red', label='Forecast')
     plt.show()
 
-arima_test(600, 1000)
+arimax()
+
+#In my opinion ARIMAX doesn't make much more sense than ARIMA- probably due to lack of some significant changes in
+#added exogs; in other words, it will give similar results to classic ARIMA.
